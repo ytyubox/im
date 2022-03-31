@@ -10,6 +10,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
     ],
     targets: [
         .executableTarget(
@@ -18,7 +19,7 @@ let package = Package(
                 .product(
                     name: "ArgumentParser",
                     package: "swift-argument-parser"),
-                "ImCore"
+                "ImCore",
             ]),
         .target(
             name: "ImCore"),
@@ -27,6 +28,10 @@ let package = Package(
             dependencies: ["ImCore"]),
         .testTarget(
             name: "ImTests",
-            dependencies: ["im", "ImCore"]),
+            dependencies: [
+                "im",
+                "ImCore",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+            ]),
     ]
 )

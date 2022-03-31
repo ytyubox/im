@@ -1,35 +1,15 @@
 import XCTest
 import class Foundation.Bundle
+import SnapshotTesting
 
 final class ImTests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-
-        // Some of the APIs that we use below are available in macOS 10.13 and above.
-        guard #available(macOS 10.13, *) else {
-            return
-        }
-
-        // Mac Catalyst won't have `Process`, but it is supported for executables.
+    @available(macOS 10.13, *)
+    func test() throws {
+        
         #if !targetEnvironment(macCatalyst)
-
-        XCTAssertEqual(try execute(),
-"""
-Dvorak
-
-""")
-        XCTAssertEqual(try execute("--list"),
-                       """
-ABC
-Dvorak
-Pinyin - Traditional
-Shuangpin - Traditional
-Zhuyin - Traditional
-
-"""
-        )
+        assertSnapshot(matching: try execute(), as: .lines, named: "none")
+        assertSnapshot(matching: try execute("--list"), as: .lines, named: "--list")
+        assertSnapshot(matching: try execute("--help"), as: .lines, named: "--help")
         #endif
     }
 
@@ -44,7 +24,7 @@ Zhuyin - Traditional
         return Bundle.main.bundleURL
       #endif
     }
-    private func execute(_ argv: String...) throws -> String? {
+    private func execute(_ argv: String...) throws -> String {
         let im = productsDirectory.appendingPathComponent("im")
         
         let process = Process()
@@ -58,7 +38,7 @@ Zhuyin - Traditional
         process.waitUntilExit()
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        return String(data: data, encoding: .utf8)
+        return String(data: data, encoding: .utf8) ?? ""
     }
 }
 

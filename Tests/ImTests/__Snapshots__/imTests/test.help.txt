@@ -1,0 +1,10 @@
+USAGE: im [--list] [--list-id] [<id>]
+
+ARGUMENTS:
+  <id>                    The ID to select
+
+OPTIONS:
+  --list                  show list
+  --list-id               show id list
+  -h, --help              Show help information.
+

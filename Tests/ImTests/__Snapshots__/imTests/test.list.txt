@@ -1,0 +1,5 @@
+ABC
+Dvorak
+Pinyin - Traditional
+Shuangpin - Traditional
+Zhuyin - Traditional
