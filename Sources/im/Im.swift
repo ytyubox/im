@@ -4,6 +4,7 @@ import ArgumentParser
 
 @main
 struct Im:ParsableCommand {
+    
     @Flag(help: "show list") var list = false
     @Argument(help: "The ID to select") var id: String?
     mutating func run() throws {
@@ -19,7 +20,7 @@ struct Im:ParsableCommand {
                 print(obj.inputSources.map(\.name)
                         .sorted().joined(separator: "\n"))
             case false:
-                print(InputSource.current().name)
+                print(obj.current().name)
         }
     }
 }

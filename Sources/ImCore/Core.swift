@@ -1,27 +1,38 @@
 
-import Cocoa
-import Carbon
+
 import Foundation
 
-
+public struct Env {
+    public init(storage: Storage, inputSourceMethod: InputSourceMethod) {
+        self.storage = storage
+        self.inputSourceMethod = inputSourceMethod
+    }
+    
+    let storage: Storage
+    let inputSourceMethod: InputSourceMethod
+    public static var live: Env {fatalError()}
+    
+}
+public struct Storage {
+    public init(getter: @escaping () -> String?, setter: @escaping (String) -> Void) {
+        self.getter = getter
+        self.setter = setter
+    }
+    
+    let getter: ()->String?
+    let setter: (String) -> Void
+}
 
 public class InputSourceManager {
-    public init() {}
-    
+    public init(env:Env = .live) {
+        self.env = env
+    }
+    let env: Env
     public private(set) var inputSources: [InputSource] = []
     var uSeconds: UInt32 = 20000
 
      public func initialize() {
-        let inputSourceNSArray = TISCreateInputSourceList(nil, false)
-        .takeRetainedValue() as NSArray
-        let inputSourceList = inputSourceNSArray as! [TISInputSource]
-
-        inputSources = inputSourceList.filter(
-            {
-                $0.category == TISInputSource.Category.keyboardInputSource
-                && $0.isSelectable
-            })
-            .map { InputSource(tisInputSource: $0) }
+         inputSources = env.inputSourceMethod.getInputSources()
     }
 
     public func nonCJKVSource() -> InputSource? {
@@ -41,20 +52,17 @@ public class InputSourceManager {
     }
 
     public func select(inputSource: InputSource) {
-        let currentSource = InputSource.current()
+        let currentSource = current()
         if currentSource.id == inputSource.id {
             return
         }
         UserDefaults.standard.set(currentSource.id, forKey: "id")
-        TISSelectInputSource(inputSource.tisInputSource)
-        if inputSource.isCJKV {
-            if let nonCJKV = nonCJKVSource() {
-                TISSelectInputSource(nonCJKV.tisInputSource)
-                selectPrevious()
-            }
-        }
+        env.inputSourceMethod.select(inputSource)
+        
     }
-
+    public func current() -> InputSource {
+        env.inputSourceMethod.current()
+    }
 }
 
 

@@ -60,29 +60,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "imTests"
-               BuildableName = "imTests"
-               BlueprintName = "imTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "ImTests"
                BuildableName = "ImTests"
                BlueprintName = "ImTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ImCoreTests"
-               BuildableName = "ImCoreTests"
-               BlueprintName = "ImCoreTests"
                ReferencedContainer = "container:">
             </BuildableReference>
          </TestableReference>

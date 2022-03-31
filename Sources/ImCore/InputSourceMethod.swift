@@ -1,0 +1,79 @@
+import Cocoa
+import Carbon
+public struct InputSourceMethod {
+    public init(getInputSources: @escaping () -> [InputSource], select: @escaping (InputSource) -> Void, current: @escaping () -> InputSource) {
+        self.getInputSources = getInputSources
+        self.select = select
+        self.current = current
+    }
+    
+    let getInputSources:()-> [InputSource]
+    let select:(InputSource) -> Void
+    let current:() -> InputSource
+}
+
+extension TISInputSource {
+    enum Category {
+        static var keyboardInputSource: String {
+            return kTISCategoryKeyboardInputSource as String
+        }
+    }
+
+    private func getProperty(_ key: CFString) -> AnyObject? {
+        let cfType = TISGetInputSourceProperty(self, key)
+        if (cfType != nil) {
+            return Unmanaged<AnyObject>.fromOpaque(cfType!)
+            .takeUnretainedValue()
+        } else {
+            return nil
+        }
+    }
+
+    var id: String {
+        return getProperty(kTISPropertyInputSourceID) as! String
+    }
+
+    var name: String {
+        return getProperty(kTISPropertyLocalizedName) as! String
+    }
+
+    var category: String {
+        return getProperty(kTISPropertyInputSourceCategory) as! String
+    }
+
+    var isSelectable: Bool {
+        return getProperty(kTISPropertyInputSourceIsSelectCapable) as! Bool
+    }
+
+    var sourceLanguages: [String] {
+        return getProperty(kTISPropertyInputSourceLanguages) as! [String]
+    }
+}
+//public func initialize() {
+//   let inputSourceNSArray = TISCreateInputSourceList(nil, false)
+//   .takeRetainedValue() as NSArray
+//   let inputSourceList = inputSourceNSArray as! [TISInputSource]
+//
+//    inputSources = env.inputSourceMethod.getInputSources() inputSourceList.filter(
+//       {
+//           $0.category == TISInputSource.Category.keyboardInputSource
+//           && $0.isSelectable
+//       })
+//       .map { InputSource(tisInputSource: $0) }
+//}
+
+//TISSelectInputSource(inputSource.tisInputSource)
+//if inputSource.isCJKV {
+//    if let nonCJKV = nonCJKVSource() {
+//        TISSelectInputSource(nonCJKV.tisInputSource)
+//        selectPrevious()
+//    }
+//}
+
+extension InputSource {
+    init(tisInputSource: TISInputSource) {
+        self.id = tisInputSource.id
+        self.name = tisInputSource.name
+        self.sourceLanguages = tisInputSource.sourceLanguages
+    }
+}
