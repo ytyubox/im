@@ -10,7 +10,15 @@ public struct Env {
     
     let storage: Storage
     let inputSourceMethod: InputSourceMethod
-    public static var live: Env {fatalError()}
+    public static var live: Env {
+        Env(
+            storage: Storage(getter: {
+                UserDefaults.standard.string(forKey: "id")
+            }, setter: { id in
+                UserDefaults.standard.set(id, forKey: "id")
+            }),
+            inputSourceMethod: InputSourceMethod.live)
+    }
     
 }
 public struct Storage {
