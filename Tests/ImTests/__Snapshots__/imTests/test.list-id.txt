@@ -1,0 +1,5 @@
+com.apple.inputmethod.TCIM.Pinyin
+com.apple.inputmethod.TCIM.Shuangpin
+com.apple.inputmethod.TCIM.Zhuyin
+com.apple.keylayout.ABC
+com.apple.keylayout.Dvorak

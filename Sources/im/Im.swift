@@ -10,13 +10,16 @@ struct Im:ParsableCommand {
     @Argument(help: "The ID to select") var id: String?
     mutating func run() throws {
         let obj = InputSourceManager()
-        switch list {
-            case true:
-                obj.initialize()
-                print(obj.inputSources.map(\.name)
-                        .sorted().joined(separator: "\n"))
-            case false:
-                print(obj.current().name)
+        obj.initialize()
+        if list {
+            print(obj.inputSources.map(\.name)
+                    .sorted().joined(separator: "\n"))
+        } else if listId {
+            print(obj.inputSources.map(\.id)
+                    .sorted().joined(separator: "\n"))
+        }
+        else {
+            print(obj.current().name)
         }
     }
 }
