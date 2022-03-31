@@ -1,7 +1,7 @@
 import XCTest
 import class Foundation.Bundle
 
-final class tryTests: XCTestCase {
+final class ImTests: XCTestCase {
     func testExample() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
@@ -15,21 +15,21 @@ final class tryTests: XCTestCase {
         // Mac Catalyst won't have `Process`, but it is supported for executables.
         #if !targetEnvironment(macCatalyst)
 
-        let fooBinary = productsDirectory.appendingPathComponent("try")
+        XCTAssertEqual(try execute(),
+"""
+Dvorak
 
-        let process = Process()
-        process.executableURL = fooBinary
+""")
+        XCTAssertEqual(try execute("--list"),
+                       """
+ABC
+Dvorak
+Pinyin - Traditional
+Shuangpin - Traditional
+Zhuyin - Traditional
 
-        let pipe = Pipe()
-        process.standardOutput = pipe
-
-        try process.run()
-        process.waitUntilExit()
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        let output = String(data: data, encoding: .utf8)
-
-        XCTAssertEqual(output, "Hello, world!\n")
+"""
+        )
         #endif
     }
 
@@ -44,4 +44,21 @@ final class tryTests: XCTestCase {
         return Bundle.main.bundleURL
       #endif
     }
+    private func execute(_ argv: String...) throws -> String? {
+        let im = productsDirectory.appendingPathComponent("im")
+        
+        let process = Process()
+        process.executableURL = im
+        process.arguments = argv
+        let pipe = Pipe()
+        process.standardOutput = pipe
+        
+        
+        try process.run()
+        process.waitUntilExit()
+        
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        return String(data: data, encoding: .utf8)
+    }
 }
+
