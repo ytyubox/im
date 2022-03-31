@@ -24,5 +24,8 @@ let package = Package(
         .testTarget(
             name: "ImCoreTests",
             dependencies: ["ImCore"]),
+        .testTarget(
+            name: "ImTests",
+            dependencies: ["im"]),
     ]
 )

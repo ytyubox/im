@@ -1,5 +1,12 @@
 import Foundation
+import ArgumentParser
 
+@main
+struct Im:ParsableCommand {
+    mutating func run() throws {
+        
+    }
+}
 //InputSourceManager.initialize()
 //if CommandLine.arguments.count == 1 {
 //    let currentSource = InputSourceManager.getCurrentSource()
