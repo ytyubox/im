@@ -26,12 +26,6 @@ class InputSourceManager {
         return inputSources.first(where: { !$0.isCJKV })
     }
 
-    static func getCurrentSource()->InputSource{
-        return InputSource(
-            tisInputSource:
-            TISCopyCurrentKeyboardInputSource().takeRetainedValue()
-        )
-    }
 
     static func getInputSource(name: String)->InputSource{
         let inputSources = InputSourceManager.inputSources

@@ -1,6 +1,12 @@
 import Foundation
 import Carbon
 struct InputSource: Equatable {
+    static func current() -> InputSource {
+        InputSource(
+            tisInputSource:
+            TISCopyCurrentKeyboardInputSource().takeRetainedValue()
+        )
+    }
     static func == (lhs: InputSource, rhs: InputSource) -> Bool {
         return lhs.id == rhs.id
     }
@@ -28,7 +34,7 @@ struct InputSource: Equatable {
 
 
 func select(inputSource: InputSource) {
-    let currentSource = InputSourceManager.getCurrentSource()
+    let currentSource = InputSource.current()
     if currentSource.id == inputSource.id {
         return
     }

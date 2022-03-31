@@ -16,7 +16,7 @@ final class IMIntegrationTests: XCTestCase {
             "ABC",
             "Zhuyin - Traditional",
             "Pinyin - Traditional"])
-        let current = InputSourceManager.getCurrentSource()
+        let current = InputSource.current()
         XCTAssertEqual(current.id,
                        "com.apple.keylayout.Dvorak")
         addTeardownBlock {
@@ -26,12 +26,12 @@ final class IMIntegrationTests: XCTestCase {
             sut.first{$0.id == "com.apple.keylayout.ABC"}
         )
         select(inputSource: abc)
-        XCTAssertEqual(InputSourceManager.getCurrentSource().id,
+        XCTAssertEqual(InputSource.current().id,
                        "com.apple.keylayout.ABC")
         
         InputSourceManager.selectPrevious()
         
-        XCTAssertEqual(InputSourceManager.getCurrentSource().id,
+        XCTAssertEqual(InputSource.current().id,
                        "com.apple.keylayout.Dvorak")
     }
     
