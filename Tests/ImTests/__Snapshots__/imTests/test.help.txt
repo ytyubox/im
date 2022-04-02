@@ -7,5 +7,6 @@ OPTIONS:
   --toggle                toggle last input method by im
   --list                  show list
   --list-id               show id list
+  --version               Show the version.
   -h, --help              Show help information.
 

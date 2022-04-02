@@ -6,11 +6,18 @@ import ImCore
 final class ImTests: XCTestCase {
     @available(macOS 10.13, *)
     func test() throws {
+        
 #if !targetEnvironment(macCatalyst)
+        try assertExecute("--help")
+        try assertExecute("--version")
         try assertExecute()
+        
+        
         try assertExecute("--list")
         try assertExecute("--list-id")
-        try assertExecute("--help")
+        
+        
+        
         try assertExecute("--toggle")
         //Only test on case insensitive, because macOS by default is case insensitive, and I am ok with that
         try assertExecute("Dvorak")

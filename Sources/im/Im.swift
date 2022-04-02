@@ -4,6 +4,17 @@ import ArgumentParser
 
 @main
 struct Im:ParsableCommand {
+    static var configuration = CommandConfiguration(
+//        commandName: "im",
+//        abstract: "",
+//        usage: nil,
+//        discussion: "",
+        version: "0.0.1"//,
+//        shouldDisplay: <#T##Bool#>,
+//        subcommands: <#T##[ParsableCommand.Type]#>,
+//        defaultSubcommand: <#T##ParsableCommand.Type?#>,
+//        helpNames: <#T##NameSpecification?#>
+    )
     @Flag(help: "toggle last input method by im") var toggle = false
     @Flag(help: "show list") var list = false
     @Flag(help: "show id list") var listId = false
