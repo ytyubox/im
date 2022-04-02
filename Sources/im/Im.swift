@@ -1,27 +1,45 @@
 import ArgumentParser
 import Foundation
 import ImCore
+#if DEBUG
+var testing:Bool {
+    ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+}
 
+private func makeSpy(_ inputSources: [InputSource]) -> Spy {
+    Spy(id: nil, current: InputSource(id: "com.ABC", name: "ABC"), inputSources: inputSources)
+}
+
+private let zh = [
+    InputSource(id: "com.Dvorak", name: "Dvorak"),
+    InputSource(id: "com.ABC", name: "ABC"),
+    InputSource(id: "com.Shuangpin", name: "雙拼"),
+    InputSource(id: "com.Zhuyin", name: "注音"),
+    InputSource(id: "com.Pinyin", name: "拼音"),
+]
+private let eng = [
+    InputSource(id: "com.Dvorak", name: "Dvorak"),
+    InputSource(id: "com.Shuangpin", name: "Shuangpin - Traditional"),
+    InputSource(id: "com.ABC", name: "ABC"),
+    InputSource(id: "com.Zhuyin", name: "Zhuyin - Traditional"),
+    InputSource(id: "com.Pinyin", name: "Pinyin - Traditional"),
+]
+let spy = makeSpy(eng)
+let env:Env = testing ? spy.makeENV() : .live
+#else
+let env:Env = .live
+#endif
 @main
 struct Im: ParsableCommand {
-    static var env:Env = .live
     static var configuration = CommandConfiguration(
-        //        commandName: "im",
-//        abstract: "",
-//        usage: nil,
-//        discussion: "",
-        version: "0.0.1" // ,
-//        shouldDisplay: <#T##Bool#>,
-//        subcommands: <#T##[ParsableCommand.Type]#>,
-//        defaultSubcommand: <#T##ParsableCommand.Type?#>,
-//        helpNames: <#T##NameSpecification?#>
+        version: "0.0.1"
     )
     @Flag(help: "toggle last input method by im") var toggle = false
     @Flag(help: "show list") var list = false
     @Flag(help: "show id list") var listId = false
     @Argument(help: "The ID to select") var id: String?
     mutating func run() throws {
-        let obj = InputSourceManager(env: Self.env)
+        let obj = InputSourceManager(env: env)
         obj.initialize()
         if list {
             print(obj.inputSources.map(\.name)

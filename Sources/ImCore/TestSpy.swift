@@ -9,14 +9,20 @@ public final class Spy {
     private(set) var id: String?
     private(set) var current: InputSource
     let inputSources: [InputSource]
-    private var selectHistory: [InputSource] = []
-    private(set) var idSetterCount = 0
+    public private(set) var selectHistory: [InputSource] = []
+    public private(set) var idHistory:[String] = []
+    public var idSetterCount:Int {
+        idHistory.filter { s in
+            s.contains("setter")
+        }.count
+    }
     public func makeENV() -> Env {
         Env(
             storage: Storage(getter: {
-                self.id
+                self.idHistory.append("getter")
+                return self.id
             }, setter: { id in
-                self.idSetterCount += 1
+                self.idHistory.append("setter \(id)")
                 self.id = id
             }),
             inputSourceMethod: InputSourceMethod(

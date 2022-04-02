@@ -12,7 +12,8 @@ public class InputSourceManager {
     var uSeconds: UInt32 = 20000
 
     public func initialize() {
-        inputSources = env.inputSourceMethod.getInputSources()
+        inputSources = env.inputSourceMethod.getInputSources().sorted{$0.id < $1.id
+        }
     }
 
     public func getInputSource(name: String) -> [InputSource] {
@@ -25,9 +26,8 @@ public class InputSourceManager {
     }
 
     public func selectPrevious() {
-        guard let id = env.storage.getter(),
-              let input = inputSources.first(where: { $0.id == id }) else { return }
-        select(inputSource: input)
+        guard let id = env.storage.getter() else { return }
+        try! select(id: id)
     }
 
     public func select(id: String) throws {

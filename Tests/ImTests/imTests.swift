@@ -2,8 +2,10 @@ import class Foundation.Bundle
 import ImCore
 import SnapshotTesting
 import XCTest
+@testable import im
 
 final class ImTests: XCTestCase {
+    
     @available(macOS 10.13, *)
     func test() throws {
         
