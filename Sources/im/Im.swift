@@ -4,7 +4,7 @@ import ArgumentParser
 
 @main
 struct Im:ParsableCommand {
-    
+    @Flag(help: "toggle last input method by im") var toggle = false
     @Flag(help: "show list") var list = false
     @Flag(help: "show id list") var listId = false
     @Argument(help: "The ID to select") var id: String?
@@ -19,6 +19,8 @@ struct Im:ParsableCommand {
                     .sorted().joined(separator: "\n"))
         } else if let id = id {
             try obj.select(id: id)
+        } else if toggle {
+            obj.selectPrevious()
         }
         else {
             print(obj.current().name)

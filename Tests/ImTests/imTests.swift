@@ -1,26 +1,29 @@
 import XCTest
 import class Foundation.Bundle
 import SnapshotTesting
+import ImCore
 
 final class ImTests: XCTestCase {
     @available(macOS 10.13, *)
     func test() throws {
-        
 #if !targetEnvironment(macCatalyst)
         try assertExecute()
         try assertExecute("--list")
         try assertExecute("--list-id")
         try assertExecute("--help")
+        try assertExecute("--toggle")
         //Only test on case insensitive, because macOS by default is case insensitive, and I am ok with that
         try assertExecute("Dvorak")
         try assertExecute("com")
         try assertExecute("anyID")
 #endif
     }
-    func testDup() throws {
-        try assertExecute("Dvorak", testName: "test")
+    override class func tearDown() {
+        let im = InputSourceManager()
+        im.initialize()
+        try! im.select(id: "Dvorak")
     }
- 
+    // MARK: - Test Helper
     private func assertExecute(_ argv: String...,
                          file: StaticString = #file,
                                testName: String = #function,
