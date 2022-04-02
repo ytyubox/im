@@ -4,7 +4,7 @@ public struct Env {
         self.storage = storage
         self.inputSourceMethod = inputSourceMethod
     }
-    
+
     let storage: Storage
     let inputSourceMethod: InputSourceMethod
     public static var live: Env {
@@ -14,17 +14,18 @@ public struct Env {
             }, setter: { id in
                 UserDefaults.standard.set(id, forKey: "id")
             }),
-            inputSourceMethod: InputSourceMethod.live)
+            inputSourceMethod: InputSourceMethod.live
+        )
     }
-    
 }
+
 public struct Storage {
     public init(getter: @escaping () -> String?, setter: @escaping (String) -> Void) {
         self.getter = getter
         self.setter = setter
     }
-    
-    let getter: ()->String?
+
+    let getter: () -> String?
     let setter: (String) -> Void
 }
 
@@ -32,6 +33,6 @@ struct ImError: LocalizedError {
     internal init(_ errorDescription: String) {
         self.errorDescription = errorDescription
     }
-    
+
     var errorDescription: String?
 }

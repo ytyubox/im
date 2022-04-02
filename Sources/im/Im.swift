@@ -1,15 +1,15 @@
+import ArgumentParser
 import Foundation
 import ImCore
-import ArgumentParser
 
 @main
-struct Im:ParsableCommand {
+struct Im: ParsableCommand {
     static var configuration = CommandConfiguration(
-//        commandName: "im",
+        //        commandName: "im",
 //        abstract: "",
 //        usage: nil,
 //        discussion: "",
-        version: "0.0.1"//,
+        version: "0.0.1" // ,
 //        shouldDisplay: <#T##Bool#>,
 //        subcommands: <#T##[ParsableCommand.Type]#>,
 //        defaultSubcommand: <#T##ParsableCommand.Type?#>,
@@ -24,25 +24,25 @@ struct Im:ParsableCommand {
         obj.initialize()
         if list {
             print(obj.inputSources.map(\.name)
-                    .sorted().joined(separator: "\n"))
+                .sorted().joined(separator: "\n"))
         } else if listId {
             print(obj.inputSources.map(\.id)
-                    .sorted().joined(separator: "\n"))
+                .sorted().joined(separator: "\n"))
         } else if let id = id {
             try obj.select(id: id)
         } else if toggle {
             obj.selectPrevious()
-        }
-        else {
+        } else {
             print(obj.current().name)
         }
     }
 }
-//InputSourceManager.initialize()
-//if CommandLine.arguments.count == 1 {
+
+// InputSourceManager.initialize()
+// if CommandLine.arguments.count == 1 {
 //    let currentSource = InputSourceManager.getCurrentSource()
 //    print(currentSource.id)
-//} else {
+// } else {
 //    let checkOptPrompt = kAXTrustedCheckOptionPrompt.takeUnretainedValue(
 //        ) as NSString
 //    let options = [checkOptPrompt: true]
@@ -58,4 +58,4 @@ struct Im:ParsableCommand {
 //    } else {
 //        usleep(5000000)
 //    }
-//}
+// }

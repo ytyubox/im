@@ -1,43 +1,41 @@
-import Cocoa
 import Carbon
+import Cocoa
 public struct InputSourceMethod {
     public init(getInputSources: @escaping () -> [InputSource], select: @escaping (InputSource) -> Void, current: @escaping () -> InputSource) {
         self.getInputSources = getInputSources
         self.select = select
         self.current = current
     }
-    
-    let getInputSources:()-> [InputSource]
-    let select:(InputSource) -> Void
-    let current:() -> InputSource
+
+    let getInputSources: () -> [InputSource]
+    let select: (InputSource) -> Void
+    let current: () -> InputSource
     static var live: InputSourceMethod {
         InputSourceMethod {
-               let inputSourceNSArray = TISCreateInputSourceList(nil, false)
-               .takeRetainedValue() as NSArray
-               let inputSourceList = inputSourceNSArray as! [TISInputSource]
-            
-                return inputSourceList.filter(
-                   {
-                       $0.category == TISInputSource.Category.keyboardInputSource
-                       && $0.isSelectable
-                   })
-                   .map { InputSource(tisInputSource: $0) }
+            let inputSourceNSArray = TISCreateInputSourceList(nil, false)
+                .takeRetainedValue() as NSArray
+            let inputSourceList = inputSourceNSArray as! [TISInputSource]
+
+            return inputSourceList.filter {
+                $0.category == TISInputSource.Category.keyboardInputSource
+                    && $0.isSelectable
+            }
+            .map { InputSource(tisInputSource: $0) }
         } select: { inputSource in
             let inputSourceNSArray = TISCreateInputSourceList(nil, false)
-            .takeRetainedValue() as NSArray
+                .takeRetainedValue() as NSArray
             let inputSourceList = inputSourceNSArray as! [TISInputSource]
-         
-              let that = inputSourceList.first{
-                    $0.id == inputSource.id
-                    
-                }!
+
+            let that = inputSourceList.first {
+                $0.id == inputSource.id
+
+            }!
             TISSelectInputSource(that)
         } current: {
-            InputSource( tisInputSource: TISCopyCurrentKeyboardInputSource()
-                    .takeRetainedValue()
+            InputSource(tisInputSource: TISCopyCurrentKeyboardInputSource()
+                .takeRetainedValue()
             )
         }
-
     }
 }
 
@@ -50,9 +48,9 @@ extension TISInputSource {
 
     private func getProperty(_ key: CFString) -> AnyObject? {
         let cfType = TISGetInputSourceProperty(self, key)
-        if (cfType != nil) {
+        if cfType != nil {
             return Unmanaged<AnyObject>.fromOpaque(cfType!)
-            .takeUnretainedValue()
+                .takeUnretainedValue()
         } else {
             return nil
         }
@@ -79,11 +77,10 @@ extension TISInputSource {
     }
 }
 
-
 extension InputSource {
     init(tisInputSource: TISInputSource) {
-        self.id = tisInputSource.id
-        self.name = tisInputSource.name
-        self.sourceLanguages = tisInputSource.sourceLanguages
+        id = tisInputSource.id
+        name = tisInputSource.name
+        sourceLanguages = tisInputSource.sourceLanguages
     }
 }

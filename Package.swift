@@ -18,20 +18,24 @@ let package = Package(
             dependencies: [
                 .product(
                     name: "ArgumentParser",
-                    package: "swift-argument-parser"),
+                    package: "swift-argument-parser"
+                ),
                 "ImCore",
-            ]),
+            ]
+        ),
         .target(
             name: "ImCore"),
         .testTarget(
             name: "ImCoreTests",
-            dependencies: ["ImCore"]),
+            dependencies: ["ImCore"]
+        ),
         .testTarget(
             name: "ImTests",
             dependencies: [
                 "im",
                 "ImCore",
                 .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
-            ]),
+            ]
+        ),
     ]
 )
