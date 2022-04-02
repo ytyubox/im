@@ -2,34 +2,6 @@
 
 import Foundation
 
-public struct Env {
-    public init(storage: Storage, inputSourceMethod: InputSourceMethod) {
-        self.storage = storage
-        self.inputSourceMethod = inputSourceMethod
-    }
-    
-    let storage: Storage
-    let inputSourceMethod: InputSourceMethod
-    public static var live: Env {
-        Env(
-            storage: Storage(getter: {
-                UserDefaults.standard.string(forKey: "id")
-            }, setter: { id in
-                UserDefaults.standard.set(id, forKey: "id")
-            }),
-            inputSourceMethod: InputSourceMethod.live)
-    }
-    
-}
-public struct Storage {
-    public init(getter: @escaping () -> String?, setter: @escaping (String) -> Void) {
-        self.getter = getter
-        self.setter = setter
-    }
-    
-    let getter: ()->String?
-    let setter: (String) -> Void
-}
 
 public class InputSourceManager {
     public init(env:Env = .live) {
@@ -58,7 +30,20 @@ public class InputSourceManager {
               let input = inputSources.first(where: {$0.id == id}) else {return}
         select(inputSource: input)
     }
-
+    public func select(id: String) throws {
+        if inputSources.isEmpty {
+            throw ImError("found no input resource on your system, if you think this is bug, please report")
+        }
+        let filtered = inputSources.filter{$0.id.uppercased().contains(id.uppercased())}
+        if filtered.isEmpty {
+            throw ImError("no input source found with that id:`\(id)`, maybe you did not install that?")
+        }
+        if filtered.count > 1 {
+            throw ImError("found some input source with that id:`\(id)`, please be more specific")
+        }
+        select(inputSource: filtered[0])
+        
+    }
     public func select(inputSource: InputSource) {
         let currentSource = current()
         if currentSource.id == inputSource.id {

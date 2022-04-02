@@ -17,6 +17,8 @@ struct Im:ParsableCommand {
         } else if listId {
             print(obj.inputSources.map(\.id)
                     .sorted().joined(separator: "\n"))
+        } else if let id = id {
+            try obj.select(id: id)
         }
         else {
             print(obj.current().name)

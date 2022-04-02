@@ -11,9 +11,15 @@ final class ImTests: XCTestCase {
         try assertExecute("--list")
         try assertExecute("--list-id")
         try assertExecute("--help")
+        //Only test on case insensitive, because macOS by default is case insensitive, and I am ok with that
+        try assertExecute("Dvorak")
+        try assertExecute("com")
+        try assertExecute("anyID")
 #endif
     }
-    
+    func testDup() throws {
+        try assertExecute("Dvorak", testName: "test")
+    }
  
     private func assertExecute(_ argv: String...,
                          file: StaticString = #file,
@@ -26,13 +32,15 @@ final class ImTests: XCTestCase {
         process.executableURL = im
         process.arguments = argv
         let pipe = Pipe()
-        process.standardOutput = pipe
         
+        process.standardOutput = pipe
+        process.standardError = pipe
         
         try process.run()
         process.waitUntilExit()
         
         let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        
         let output =  String(data: data, encoding: .utf8) ?? ""
         let named: String = argv.joined(separator: " ").emptyWith("none")
         assertSnapshot(matching: output, as: .lines, named: named, file: file,testName: testName,  line: line)
