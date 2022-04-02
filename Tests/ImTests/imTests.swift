@@ -6,6 +6,7 @@ import XCTest
 final class ImTests: XCTestCase {
     @available(macOS 10.13, *)
     func test() throws {
+        
         #if !targetEnvironment(macCatalyst)
             try assertExecute("--help")
             try assertExecute("--version")

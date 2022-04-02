@@ -15,17 +15,17 @@ public class InputSourceManager {
         inputSources = env.inputSourceMethod.getInputSources()
     }
 
-    public func nonCJKVSource() -> InputSource? {
-        return inputSources.first(where: { !$0.isCJKV })
-    }
-
-    public func getInputSource(name: String) -> InputSource {
+    public func getInputSource(name: String) -> [InputSource] {
         let inputSources = inputSources
-        return inputSources.filter { $0.id == name }.first!
+        return inputSources.filter { $0.name == name }
+    }
+    public func getInputSource(id: String) -> [InputSource] {
+        let inputSources = inputSources
+        return inputSources.filter { $0.id == id }
     }
 
     public func selectPrevious() {
-        guard let id = UserDefaults.standard.string(forKey: "id"),
+        guard let id = env.storage.getter(),
               let input = inputSources.first(where: { $0.id == id }) else { return }
         select(inputSource: input)
     }
@@ -49,7 +49,7 @@ public class InputSourceManager {
         if currentSource.id == inputSource.id {
             return
         }
-        UserDefaults.standard.set(currentSource.id, forKey: "id")
+        env.storage.setter(currentSource.id)
         env.inputSourceMethod.select(inputSource)
     }
 

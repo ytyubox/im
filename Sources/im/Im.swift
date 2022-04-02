@@ -4,6 +4,7 @@ import ImCore
 
 @main
 struct Im: ParsableCommand {
+    static var env:Env = .live
     static var configuration = CommandConfiguration(
         //        commandName: "im",
 //        abstract: "",
@@ -20,7 +21,7 @@ struct Im: ParsableCommand {
     @Flag(help: "show id list") var listId = false
     @Argument(help: "The ID to select") var id: String?
     mutating func run() throws {
-        let obj = InputSourceManager()
+        let obj = InputSourceManager(env: Self.env)
         obj.initialize()
         if list {
             print(obj.inputSources.map(\.name)
