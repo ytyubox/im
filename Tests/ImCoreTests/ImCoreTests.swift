@@ -9,7 +9,7 @@ final class IMCoreTests: XCTestCase {
                                  name: "Dvorak"),
             inputSources: eng_inputSources
         )
-        let sut = InputSourceManager(env: spy.makeENV())
+        let sut = InputSourceManager(env: spy.makeMemoryENV())
         sut.initialize()
         XCTAssertEqual(sut.inputSources.map(\.id), [
             "com.ABC",
@@ -36,7 +36,10 @@ final class IMCoreTests: XCTestCase {
         XCTAssertEqual(spy.idHistory, ["setter com.Dvorak"])
         sut.selectPrevious()
         XCTAssertEqual(spy.idSetterCount, 2)
-        XCTAssertEqual(spy.idHistory, ["setter com.Dvorak", "getter", "setter com.ABC"])
+        XCTAssertEqual(spy.idHistory, [
+            "setter com.Dvorak",
+            "getter com.Dvorak",
+            "setter com.ABC"])
         XCTAssertEqual(sut.current().id,
                        "com.Dvorak")
     }
@@ -47,7 +50,7 @@ final class IMCoreTests: XCTestCase {
                                  name: "Dvorak"),
             inputSources: zh_inputSources
         )
-        let sut = InputSourceManager(env: spy.makeENV())
+        let sut = InputSourceManager(env: spy.makeMemoryENV())
         sut.initialize()
         XCTAssertEqual(sut.inputSources.map(\.id), [
             "com.ABC",
@@ -68,7 +71,10 @@ final class IMCoreTests: XCTestCase {
         XCTAssertEqual(spy.idHistory, ["setter com.Dvorak"])
         sut.selectPrevious()
         XCTAssertEqual(spy.idSetterCount, 2)
-        XCTAssertEqual(spy.idHistory, ["setter com.Dvorak", "getter", "setter com.ABC"])
+        XCTAssertEqual(spy.idHistory, [
+            "setter com.Dvorak",
+            "getter com.Dvorak",
+            "setter com.ABC"])
         XCTAssertEqual(sut.current().id,
                        "com.Dvorak")
     }

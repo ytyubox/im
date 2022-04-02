@@ -24,6 +24,9 @@ public class InputSourceManager {
         let inputSources = inputSources
         return inputSources.filter { $0.id == id }
     }
+    public var lastID: String? {
+        return env.storage.getter()
+    }
 
     public func selectPrevious() {
         guard let id = env.storage.getter() else { return }
@@ -46,10 +49,10 @@ public class InputSourceManager {
 
     public func select(inputSource: InputSource) {
         let currentSource = current()
+        env.storage.setter(currentSource.id)
         if currentSource.id == inputSource.id {
             return
         }
-        env.storage.setter(currentSource.id)
         env.inputSourceMethod.select(inputSource)
     }
 

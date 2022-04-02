@@ -1,34 +1,7 @@
 import ArgumentParser
 import Foundation
 import ImCore
-#if DEBUG
-var testing:Bool {
-    ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
-}
 
-private func makeSpy(_ inputSources: [InputSource]) -> Spy {
-    Spy(id: nil, current: InputSource(id: "com.ABC", name: "ABC"), inputSources: inputSources)
-}
-
-private let zh = [
-    InputSource(id: "com.Dvorak", name: "Dvorak"),
-    InputSource(id: "com.ABC", name: "ABC"),
-    InputSource(id: "com.Shuangpin", name: "雙拼"),
-    InputSource(id: "com.Zhuyin", name: "注音"),
-    InputSource(id: "com.Pinyin", name: "拼音"),
-]
-private let eng = [
-    InputSource(id: "com.Dvorak", name: "Dvorak"),
-    InputSource(id: "com.Shuangpin", name: "Shuangpin - Traditional"),
-    InputSource(id: "com.ABC", name: "ABC"),
-    InputSource(id: "com.Zhuyin", name: "Zhuyin - Traditional"),
-    InputSource(id: "com.Pinyin", name: "Pinyin - Traditional"),
-]
-let spy = makeSpy(eng)
-let env:Env = testing ? spy.makeENV() : .live
-#else
-let env:Env = .live
-#endif
 @main
 struct Im: ParsableCommand {
     static var configuration = CommandConfiguration(
@@ -36,23 +9,26 @@ struct Im: ParsableCommand {
     )
     @Flag(help: "toggle last input method by im") var toggle = false
     @Flag(help: "show list") var list = false
+    @Flag(help: "show last id for toggle") var last = false
     @Flag(help: "show id list") var listId = false
     @Argument(help: "The ID to select") var id: String?
     mutating func run() throws {
-        let obj = InputSourceManager(env: env)
-        obj.initialize()
+        let manager = InputSourceManager(env: env)
+        manager.initialize()
         if list {
-            print(obj.inputSources.map(\.name)
+            print(manager.inputSources.map(\.name)
                 .sorted().joined(separator: "\n"))
         } else if listId {
-            print(obj.inputSources.map(\.id)
+            print(manager.inputSources.map(\.id)
                 .sorted().joined(separator: "\n"))
         } else if let id = id {
-            try obj.select(id: id)
+            try manager.select(id: id)
         } else if toggle {
-            obj.selectPrevious()
+            manager.selectPrevious()
+        } else if last {
+            print(manager.lastID ?? "nil")
         } else {
-            print(obj.current().name)
+            print(manager.current().name)
         }
     }
 }

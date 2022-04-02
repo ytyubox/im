@@ -1,4 +1,4 @@
-USAGE: im [--toggle] [--list] [--list-id] [<id>]
+USAGE: im [--toggle] [--list] [--last] [--list-id] [<id>]
 
 ARGUMENTS:
   <id>                    The ID to select
@@ -6,6 +6,7 @@ ARGUMENTS:
 OPTIONS:
   --toggle                toggle last input method by im
   --list                  show list
+  --last                  show last id for toggle
   --list-id               show id list
   --version               Show the version.
   -h, --help              Show help information.
