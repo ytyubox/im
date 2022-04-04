@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "im",
     products: [
-        .library(name: "ImCore", targets: ["ImCore"]),
+        .executable(name: "im", targets: ["im"]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
