@@ -56,6 +56,7 @@ public final class Spy {
 let defaults = UserDefaults(suiteName: "com.yu.im.test")!
 public func reset() {
     defaults.set(false, forKey: "setup")
+    defaults.removeSuite(named: "com.yu.im.test")
 }
 var testDefaultStorage: Storage {
     Storage(getter: {

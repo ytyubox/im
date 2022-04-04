@@ -27,23 +27,37 @@ public class InputSourceManager {
     public var lastID: String? {
         return env.storage.getter()
     }
+    public func setLastName(_ name: String) throws {
+        try guarding(name)
+        let sources = try getFilteredList(name: name)
+        try guarding(sources, name)
+        env.storage.setter(sources[0].id)
+    }
 
     public func selectPrevious() {
         guard let id = env.storage.getter() else { return }
         try! select(id: id)
     }
 
-    public func select(id: String) throws {
+    func getFilteredList(id: String) throws -> [InputSource] {
         if inputSources.isEmpty {
             throw ImError("found no input resource on your system, if you think this is bug, please report")
         }
-        let filtered = inputSources.filter { $0.id.uppercased().contains(id.uppercased()) }
-        if filtered.isEmpty {
-            throw ImError("no input source found with that id:`\(id)`, maybe you did not install that?")
+        return inputSources.filter { $0.id.uppercased().contains(id.uppercased()) }
+
+    }
+    func getFilteredList(name: String) throws -> [InputSource] {
+        if inputSources.isEmpty {
+            throw ImError("found no input resource on your system, if you think this is bug, please report")
         }
-        if filtered.count > 1 {
-            throw ImError("found some input source with that id:`\(id)`, please be more specific")
-        }
+        return inputSources.filter { $0.name.uppercased().contains(name.uppercased()) }
+
+    }
+    
+    public func select(id: String) throws {
+        let filtered = try getFilteredList(id: id)
+        
+        try guarding(filtered, id)
         select(inputSource: filtered[0])
     }
 
@@ -58,5 +72,21 @@ public class InputSourceManager {
 
     public func current() -> InputSource {
         env.inputSourceMethod.current()
+    }
+    
+    fileprivate func guarding(_ filtered: [InputSource], _ id: String) throws {
+        if filtered.isEmpty {
+            throw ImError("no input source found with that id:`\(id)`, maybe you did not install that?")
+        }
+        if filtered.count > 1 {
+            throw ImError("found some input source with that id:`\(id)`, please be more specific")
+        }
+    }
+    fileprivate func guarding(_ name: String) throws {
+        let current = current().name
+        
+        if current.contains(name) {
+            throw ImError("found \(name) might be current method: \(current)")
+        }
     }
 }

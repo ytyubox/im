@@ -1,6 +1,6 @@
 import Carbon
 import Foundation
-public struct InputSource: Equatable {
+public struct InputSource: Equatable, Codable {
     public init(id: String, name: String, sourceLanguages: [String] = []) {
         self.id = id
         self.name = name

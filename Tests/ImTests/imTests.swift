@@ -7,39 +7,41 @@ import XCTest
 final class ImTests: XCTestCase {
     
     @available(macOS 10.13, *)
-    func test() throws {
-        
-#if !targetEnvironment(macCatalyst)
+    func testInit() throws {
         try assertExecute("--help")
         try assertExecute("--version")
         try assertExecute()
-        
+        try assertExecute("--last")
+    }
+    func testList() throws {
         try assertExecute("--list")
         try assertExecute("--list-id")
-        
-        try assertExecute("--toggle")
+    }
+    func testSetIM() throws {
         // Only test on case insensitive, because macOS by default is case insensitive, and I am ok with that
         try assertExecute("Dvorak")
         try assertExecute("com")
         try assertExecute("anyID")
-        try assertExecute("--last")
-//        try assertExecute("--set-last", "ABC")
-#endif
-    }
-    func test2() throws {
-        try assertExecute()
-        try assertExecute("Dvorak")
-        try assertExecute(namePlus: "-2")
-        try assertExecute("--last")
-        try assertExecute("ABC")
-        try assertExecute("--last", namePlus: "-2")
     }
     
-    override func tearDown() {
-        reset()
+    func testLast() throws {
+        
+        try assertExecute("--last")
+        try assertExecute("Dvorak")
+        try assertExecute("--set-last", "Dvorak", namePlus: "ShouldFail-TheSameAsCurrent")
+        try assertExecute("--set-last", "AnyNAME")
+        try assertExecute("--set-last", "Pinyin")
+        try assertExecute("--last", namePlus: "ShouldBePinyin")
     }
     
     // MARK: - Test Helper
+    override func setUp() {
+        storage.removePersistentDomain(forName: "test.im")
+    }
+    override func tearDown() {
+        storage.removePersistentDomain(forName: "test.im")
+    }
+    private let storage = UserDefaults(suiteName: "test.im")!
     
     private func assertExecute(_ argv: String...,
                                namePlus: String = "",
@@ -47,11 +49,25 @@ final class ImTests: XCTestCase {
                                testName: String = #function,
                                line: UInt = #line) throws
     {
+#if !targetEnvironment(macCatalyst)
+
         let im = productsDirectory.appendingPathComponent("im")
         
         let process = Process()
         process.executableURL = im
-        process.arguments = argv
+        let debug = Debug(
+            suitName: "test.im",
+            current: InputSource(id: "com.ABC", name: "ABC"),
+            inputSources: [
+                InputSource(id: "com.Dvorak", name: "Dvorak"),
+                InputSource(id: "com.Shuangpin", name: "Shuangpin - Traditional"),
+                InputSource(id: "com.ABC", name: "ABC"),
+                InputSource(id: "com.Zhuyin", name: "Zhuyin - Traditional"),
+                InputSource(id: "com.Pinyin", name: "Pinyin - Traditional"),
+            ])
+        let json = try JSONEncoder().encode(debug)
+        
+        process.arguments = argv + ["--debug", try XCTUnwrap(String(data: json, encoding: .utf8)) ]
         let pipe = Pipe()
         
         process.standardOutput = pipe
@@ -65,6 +81,7 @@ final class ImTests: XCTestCase {
         let output = String(data: data, encoding: .utf8) ?? ""
         let named: String = argv.joined(separator: " ").emptyWith("none") + namePlus
         assertSnapshot(matching: output, as: .lines, named: named, file: file, testName: testName, line: line)
+#endif
     }
 }
 

@@ -1,4 +1,4 @@
-USAGE: im [--toggle] [--list] [--last] [--list-id] [<id>]
+USAGE: im [--toggle] [--list] [--last] [--list-id] [<id>] [--debug <debug>] [--set-last <set-last>]
 
 ARGUMENTS:
   <id>                    The ID to select
@@ -8,6 +8,9 @@ OPTIONS:
   --list                  show list
   --last                  show last id for toggle
   --list-id               show id list
+  --debug <debug>         to inject test env
+  -s, --set-last <set-last>
+                          Set the name to toggle
   --version               Show the version.
   -h, --help              Show help information.
 
