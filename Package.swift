@@ -34,8 +34,10 @@ let package = Package(
             dependencies: [
                 "im",
                 "ImCore",
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
-            ]
+                .product(name: "SnapshotTesting",
+                         package: "swift-snapshot-testing"),
+            ],
+            exclude: ["__Snapshots__"]
         ),
     ]
 )

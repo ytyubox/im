@@ -21,11 +21,15 @@ struct Im: ParsableCommand {
     mutating func run() throws {
         
         let manager:InputSourceManager
+        #if DEBUG
         if let debug = debug {
             manager = InputSourceManager(env: Env(debug: debug))
         } else {
             manager = InputSourceManager()
         }
+        #else
+        manager = InputSourceManager()
+        #endif
         manager.initialize()
         if list {
             print(manager.inputSources.map(\.name)
