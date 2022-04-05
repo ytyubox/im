@@ -31,3 +31,9 @@ OPTIONS:
   -h, --help              Show help information.
 
 ```
+
+## Feature 😎
+
+1. Able to toggle from last input method! `im --toggle`
+2. Set input method by keyword! `im pinyin`
+3. Even can set input by shorter keyword `im spin` for ShuangPin!
