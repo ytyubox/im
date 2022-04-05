@@ -43,15 +43,14 @@ public class InputSourceManager {
         if inputSources.isEmpty {
             throw ImError("found no input resource on your system, if you think this is bug, please report")
         }
-        return inputSources.filter { $0.id.uppercased().contains(id.uppercased()) }
+        return inputSources.filter{match($0.id, id)}
 
     }
     func getFilteredList(name: String) throws -> [InputSource] {
         if inputSources.isEmpty {
             throw ImError("found no input resource on your system, if you think this is bug, please report")
         }
-        return inputSources.filter { $0.name.uppercased().contains(name.uppercased()) }
-
+        return inputSources.filter{match($0.name, name)}
     }
     
     public func select(id: String) throws {

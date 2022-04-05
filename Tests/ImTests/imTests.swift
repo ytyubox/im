@@ -8,6 +8,7 @@ final class ImTests: XCTestCase {
     
     @available(macOS 10.13, *)
     func testInit() throws {
+        
         try assertExecute("--help")
         try assertExecute("--version")
         try assertExecute()
