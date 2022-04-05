@@ -12,6 +12,7 @@ struct Im: ParsableCommand {
     @Flag(help: "show list") var list = false
     @Flag(help: "show last id for toggle") var last = false
     @Flag(help: "show id list") var listId = false
+    @Flag(help: "show list as Alfred Format") var listAlfred = false
     @Argument(help: "The ID to select") var id: String?
 #if DEBUG
     @Option(help: "to inject test env") var debug: Debug?
@@ -37,7 +38,13 @@ struct Im: ParsableCommand {
         } else if listId {
             print(manager.inputSources.map(\.id)
                     .sorted().joined(separator: "\n"))
-        } else if let id = id {
+        } else if listAlfred {
+            let alfredItems = AlfredItems(inputSources: manager.inputSources)
+            let data = try! JSONEncoder().encode(alfredItems)
+            print(String(data: data, encoding: .utf8)!)
+            
+        }
+        else if let id = id {
             try manager.select(id: id)
         } else if toggle {
             manager.selectPrevious()
@@ -116,4 +123,26 @@ func isAppTrusted() -> Bool {
         ) as NSString
     let options = [checkOptPrompt: true]
     return AXIsProcessTrustedWithOptions(options as CFDictionary?)
+}
+
+struct AlfredItems: Encodable {
+    internal init(inputSources: [InputSource]) {
+        self.items = inputSources.map(Item.init)
+    }
+    
+    let items:[Item]
+    struct Item: Encodable {
+        internal init(inputSource: InputSource) {
+            
+            self.uid = inputSource.id
+            self.title = inputSource.name
+            self.subtitle = inputSource.id
+            self.arg = inputSource.id
+        }
+        
+        var uid: String
+        var title: String
+        var subtitle:String
+        var arg: String
+    }
 }
