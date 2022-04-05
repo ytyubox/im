@@ -3,6 +3,9 @@ Change your input method from anywhere but a Shortcuts
 
 ![im - Shortcuts](SystemPreferances-Keyboard-Shortcuts.png)
 
+
+Inspired by `https://github.com/laishulu/macism`
+
 ## Install
 
 ```bash
