@@ -13,6 +13,7 @@ struct Im: ParsableCommand {
     @Flag(help: "show last id for toggle") var last = false
     @Flag(help: "show id list") var listId = false
     @Flag(help: "show list as Alfred Format") var listAlfred = false
+    @Flag(help: "show im with id") var showId = false
     @Argument(help: "The ID to select") var id: String?
 #if DEBUG
     @Option(help: "to inject test env") var debug: Debug?
@@ -55,7 +56,8 @@ struct Im: ParsableCommand {
             print("im --toggle will set to \(setLast)")
         }
         else {
-            print(manager.current().name)
+          let current = manager.current()
+          print(showId ? current.id : current.name)
         }
     }
 }

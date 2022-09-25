@@ -6,16 +6,12 @@ final class IMIntegrationTests: XCTestCase {
         let sut = InputSourceManager()
         sut.initialize()
         XCTAssertEqual(sut.inputSources.map(\.id), [
-            "com.apple.inputmethod.TCIM.Pinyin",
             "com.apple.inputmethod.TCIM.Shuangpin",
-            "com.apple.inputmethod.TCIM.Zhuyin",
             "com.apple.keylayout.ABC",
             "com.apple.keylayout.Dvorak",
         ])
         XCTAssertEqual(sut.inputSources.map(\.name), [
-            "Pinyin - Traditional",
             "Shuangpin - Traditional",
-            "Zhuyin - Traditional",
             "ABC",
             "Dvorak",
         ])

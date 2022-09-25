@@ -1,4 +1,4 @@
-USAGE: im [--toggle] [--list] [--last] [--list-id] [--list-alfred] [<id>] [--debug <debug>] [--set-last <set-last>]
+USAGE: im [--toggle] [--list] [--last] [--list-id] [--list-alfred] [--show-id] [<id>] [--debug <debug>] [--set-last <set-last>]
 
 ARGUMENTS:
   <id>                    The ID to select
@@ -9,6 +9,7 @@ OPTIONS:
   --last                  show last id for toggle
   --list-id               show id list
   --list-alfred           show list as Alfred Format
+  --show-id               show im with id
   --debug <debug>         to inject test env
   -s, --set-last <set-last>
                           Set the name to toggle
